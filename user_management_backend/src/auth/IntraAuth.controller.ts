@@ -28,7 +28,6 @@ export class IntraAuthController {
 
   @Get()
   async redirect(@Query() query, @Res() res) {
-    console.log('tiwsel lhna b3da');
     this.accessToken = await this.intraAuthService
       .getAccessToken(query)
       .then((resolve) => resolve.data)
@@ -39,7 +38,12 @@ export class IntraAuthController {
       .catch((error) => {
         console.log(error);
       });
-    return res.status(HttpStatus.OK).json({ user: this.userData });
+    return res.status(HttpStatus.OK).json({
+      access_token: await this.intraAuthService.signToken(
+        this.userData.id,
+        this.userData.email,
+      ),
+    });
   }
 
   /**

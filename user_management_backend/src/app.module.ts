@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { IntraAuthModule } from './42-auth/IntraAuth.module';
+import { IntraAuthModule } from './auth/IntraAuth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { user } from './users/users.entity';

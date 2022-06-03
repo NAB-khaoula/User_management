@@ -12,4 +12,11 @@ export class usersService {
   getAll(): Promise<user[]> {
     return this.userRepository.find();
   }
+
+  getUserById(id: number) {
+    try {
+      const newUser = this.userRepository.findOneOrFail(id);
+    } catch {}
+    return this.userRepository.findOneOrFail(id);
+  }
 }

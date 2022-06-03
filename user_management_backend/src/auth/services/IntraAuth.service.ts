@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common';
 
 import { HttpService } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 export class IntraAuthService {
-  constructor(private readonly httpService: HttpService) {}
+  constructor(
+    private readonly httpService: HttpService,
+    private jwt: JwtService,
+  ) {}
   async getAccessToken(query: any): Promise<any> {
     return firstValueFrom(
       this.httpService.post('https://api.intra.42.fr/oauth/token', {
@@ -25,5 +29,16 @@ export class IntraAuthService {
         },
       }),
     );
+  }
+
+  async signToken(userId: number, email: string): Promise<string> {
+    const payload = {
+      sub: userId,
+      email,
+    };
+    return this.jwt.signAsync(payload, {
+      expiresIn: '15m',
+      secret: process.env.JWT_SECRET,
+    });
   }
 }
