@@ -13,4 +13,8 @@ services:
     adminer:
         image: adminer
         ports:
+            - "8081:8081"
+    nginx:
+        image: nginx
+        ports:
             - "8080:8080"
