@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ParticlesBackground } from '../particles/ParticlesBack';
 import './login.css'
 
 const Login = () => {
@@ -21,11 +22,11 @@ const Login = () => {
 
     return (
         <>
+            <ParticlesBackground />
             <div className="card">
                 <div className='contributorBox'>
                     <h1>
-                        PONG 
-                        CLASSIC
+                        PONG CLASSIC
                     </h1>
                     <div class="field">
                         <div class="ping"></div>
@@ -37,10 +38,10 @@ const Login = () => {
                         Designed and developed with <i className="fa-solid fa-heart"></i> by:
                     </h6>
                     <div className='dev'>
-                        <a href='https://github.com/NAB-khaoula' className='devLink'>ME</a>
-                        <a href='https://github.com/mojahid-belaman' className='devLink'>MB</a>
-                        <a href='#' className='devLink'>SH</a>
-                        <a href='#' className='devLink'>AB</a>
+                        <a href='https://github.com/NAB-khaoula' className='devLink'></a>
+                        <a href='https://github.com/mojahid-belaman' className='devLink'></a>
+                        <a href='#' className='devLink'></a>
+                        <a href='#' className='devLink'></a>
                     </div>
                 </div>
                 <div className="LoginBox">
