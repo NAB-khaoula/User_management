@@ -31,14 +31,14 @@ export class IntraAuthService {
     );
   }
 
-  async signToken(userId: number, email: string): Promise<string> {
-    const payload = {
-      sub: userId,
-      email,
-    };
-    return this.jwt.signAsync(payload, {
-      expiresIn: '15m',
-      secret: process.env.JWT_SECRET,
-    });
-  }
+  // async signToken(userId: number, email: string): Promise<string> {
+  //   const payload = {
+  //     sub: userId,
+  //     email,
+  //   };
+  //   return this.jwt.signAsync(payload, {
+  //     expiresIn: '15m',
+  //     secret: process.env.JWT_SECRET,
+  //   });
+  // }
 }

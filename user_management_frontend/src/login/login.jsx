@@ -20,6 +20,10 @@ const Login = () => {
         console.log('logout');
     }
 
+    const loginWithIntra = () => {
+        
+    }
+
     return (
         <>
             <ParticlesBackground />
@@ -45,7 +49,7 @@ const Login = () => {
                     </div>
                 </div>
                 <div className="LoginBox">
-                    <button className='LoginButton'>Login With 42 Intra</button>
+                    <button className='LoginButton' onClick={loginWithIntra}>Login With 42 Intra</button>
                 </div>
             </div>
         </>

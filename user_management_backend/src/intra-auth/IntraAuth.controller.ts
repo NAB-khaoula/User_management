@@ -6,18 +6,22 @@ import {
   UseGuards,
   HttpStatus,
 } from '@nestjs/common';
+import { UsersService } from 'src/officialUsers/users.service';
 import { IntraAuthGuard } from './Guards/auth.guard';
 import { IntraAuthService } from './services/IntraAuth.service';
 
 @Controller('oauth')
 export class IntraAuthController {
-  constructor(private readonly intraAuthService: IntraAuthService) {}
+  constructor(
+    private readonly intraAuthService: IntraAuthService,
+    private usersService: UsersService,
+  ) {}
 
   /**
    * /api/ /home/login
    * this is the route for authentication
    */
-  userData;
+  userData: any;
   accessToken;
 
   @Get('login')
@@ -38,11 +42,13 @@ export class IntraAuthController {
       .catch((error) => {
         console.log(error);
       });
+    if (
+      (await this.usersService.getUserByUserName(this.userData['login'])) ==
+      undefined
+    )
+      await this.usersService.addUser(this.userData['login']);
     return res.status(HttpStatus.OK).json({
-      access_token: await this.intraAuthService.signToken(
-        this.userData.id,
-        this.userData.email,
-      ),
+      user: this.userData,
     });
   }
 
