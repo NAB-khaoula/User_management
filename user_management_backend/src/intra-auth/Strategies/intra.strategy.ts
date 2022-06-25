@@ -3,6 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
 import { Profile } from 'passport';
 import { config } from 'dotenv';
+import { UserDto } from '../dto/index';
 
 config();
 
@@ -13,7 +14,7 @@ export class fourtyTwoStrategy extends PassportStrategy(Strategy, '42') {
       clientID: process.env.INTRA_CLIENT_ID,
       clientSecret: process.env.INTRA_SECRET,
       callbackURL: process.env.INTRA_CALLBACK_URL,
-      scope: [],
+      // scope: ['profile'],
     });
   }
   async validate(
@@ -22,12 +23,16 @@ export class fourtyTwoStrategy extends PassportStrategy(Strategy, '42') {
     profile: Profile,
     done: verify,
   ): Promise<any> {
-    const { name, id } = profile;
-    const user = {
-      name: name.givenName,
+    const { id, username, emails, photos, displayName } = profile;
+    const user: UserDto = {
       id: id,
-      accessToken,
+      user_name: username,
+      email: emails[0].value,
+      display_name: displayName,
+      avatar_url: photos[0].value,
     };
+    // console.log(user);
     done(null, user);
+    // console.log('done');
   }
 }

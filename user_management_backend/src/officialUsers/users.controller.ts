@@ -7,14 +7,14 @@ import {
   Post,
   Res,
 } from '@nestjs/common';
-import { AuthDto } from 'src/intra-auth/dto';
+import { UserDto } from 'src/intra-auth/dto';
 import { UsersService } from './users.service';
 
 @Controller('user')
 export class UsersController {
   constructor(private userServices: UsersService) {}
   @Post('signin')
-  signin(@Body() dto: AuthDto) {
+  signin(@Body() dto: UserDto) {
     console.log(dto);
   }
   @Get(':usrName')

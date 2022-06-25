@@ -3,9 +3,12 @@ import {
   Get,
   Query,
   Res,
+  Req,
   UseGuards,
   HttpStatus,
+  HttpCode,
 } from '@nestjs/common';
+import { ok } from 'assert';
 import { UsersService } from 'src/officialUsers/users.service';
 import { IntraAuthGuard } from './Guards/auth.guard';
 import { IntraAuthService } from './services/IntraAuth.service';
@@ -24,32 +27,11 @@ export class IntraAuthController {
   userData: any;
   accessToken;
 
-  @Get('login')
-  @UseGuards(IntraAuthGuard)
-  async login() {
-    return;
-  }
-
   @Get()
-  async redirect(@Query() query, @Res() res) {
-    this.accessToken = await this.intraAuthService
-      .getAccessToken(query)
-      .then((resolve) => resolve.data)
-      .catch((error) => console.log(error));
-    this.userData = await this.intraAuthService
-      .getUserData(this.accessToken['access_token'])
-      .then((resolve) => resolve.data)
-      .catch((error) => {
-        console.log(error);
-      });
-    if (
-      (await this.usersService.getUserByUserName(this.userData['login'])) ==
-      undefined
-    )
-      await this.usersService.addUser(this.userData['login']);
-    return res.status(HttpStatus.OK).json({
-      user: this.userData,
-    });
+  @HttpCode(200)
+  @UseGuards(IntraAuthGuard)
+  async login(@Req() req, @Res() res) {
+    return this.intraAuthService.intraLogin(req, res);
   }
 
   /**
