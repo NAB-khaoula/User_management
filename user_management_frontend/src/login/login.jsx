@@ -23,7 +23,7 @@ const Login = () => {
 
     const loginWithIntra =  () => {
         axios.get('http://localhost:3000/oauth')
-            .then(resp => {  console.log('here is the json response', resp.data) });
+            .then(resp => resp.data);
     }
 
     return (
@@ -51,8 +51,8 @@ const Login = () => {
                     </div>
                 </div>
                 <div className="LoginBox">
-                    <button className='LoginButton'>
-                        <a  href='http://localhost:3000/oauth'>Login With 42 Intra</a>
+                    <button className='LoginButton' onClick={loginWithIntra}>
+                        Login With 42 Intra
                     </button>
                 </div>
             </div>
