@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { ParticlesBackground } from '../particles/ParticlesBack';
 import './login.css'
+import axios from 'axios';
 
 const Login = () => {
     const adminUser = {
@@ -20,8 +21,9 @@ const Login = () => {
         console.log('logout');
     }
 
-    const loginWithIntra = () => {
-        
+    const loginWithIntra =  () => {
+        axios.get('http://localhost:3000/oauth')
+            .then(resp => {  console.log('here is the json response', resp.data) });
     }
 
     return (
@@ -32,11 +34,11 @@ const Login = () => {
                     <h1>
                         PONG CLASSIC
                     </h1>
-                    <div class="field">
-                        <div class="ping"></div>
+                    <div className="field">
+                        <div className="ping"></div>
                         <div className="pad"></div>
-	                    <div class="pong"></div>
-	                    <div class="ball"></div>
+	                    <div className="pong"></div>
+	                    <div className="ball"></div>
                     </div>
                     <h6>
                         Designed and developed with <i className="fa-solid fa-heart"></i> by:
@@ -49,7 +51,9 @@ const Login = () => {
                     </div>
                 </div>
                 <div className="LoginBox">
-                    <button className='LoginButton' onClick={loginWithIntra}>Login With 42 Intra</button>
+                    <button className='LoginButton'>
+                        <a  href='http://localhost:3000/oauth'>Login With 42 Intra</a>
+                    </button>
                 </div>
             </div>
         </>

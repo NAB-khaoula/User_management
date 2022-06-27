@@ -14,7 +14,6 @@ export class fourtyTwoStrategy extends PassportStrategy(Strategy, '42') {
       clientID: process.env.INTRA_CLIENT_ID,
       clientSecret: process.env.INTRA_SECRET,
       callbackURL: process.env.INTRA_CALLBACK_URL,
-      // scope: ['profile'],
     });
   }
   async validate(
@@ -23,11 +22,9 @@ export class fourtyTwoStrategy extends PassportStrategy(Strategy, '42') {
     profile: Profile,
     done: verify,
   ): Promise<any> {
-    const { id, username, emails, photos, displayName } = profile;
+    const { id, username, photos, displayName } = profile;
     const user: UserDto = {
-      id: id,
       user_name: username,
-      email: emails[0].value,
       display_name: displayName,
       avatar_url: photos[0].value,
     };

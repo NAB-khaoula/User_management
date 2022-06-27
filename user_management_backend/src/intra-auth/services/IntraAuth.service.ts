@@ -49,8 +49,8 @@ export class IntraAuthService {
     if (!req.user) {
       return 'No user from intra';
     } else {
-      if (!this.usersService.getUserByUserName(req.user['user_name']))
-        await this.usersService.addUser(req.user['user_name']);
+      const userExist = await this.usersService.getUserByUserName(req.user);
+      if (!userExist) await this.usersService.addUser(req.user);
       return res.status(HttpStatus.OK).json({
         message: 'User information from intra',
         user: req.user,
