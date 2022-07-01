@@ -4,8 +4,8 @@ import { IntraAuthController } from './IntraAuth.controller';
 import { fourtyTwoStrategy } from './Strategies/intra.strategy';
 import { IntraAuthGuard } from './Guards/auth.guard';
 import { JwtModule } from '@nestjs/jwt';
-import { UsersService } from 'src/officialUsers/users.service';
-import { UsersModule } from 'src/officialUsers/users.module';
+import { UsersService } from 'src/users/users.service';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   imports: [HttpModule, JwtModule.register({}), UsersModule],

@@ -2,16 +2,16 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 
 import './App.css';
 import Login from './login/login';
-// import Settings from './Settings/settings';
+import Settings from './Settings/settings';
 
 function App() {
   return (
     <Router>
       <main className="App">
         <Switch>
-          {/* <Route path={'/settings'}>
+          <Route path={'/settings'}>
             <Settings/>
-          </Route> */}
+          </Route>
           <Route path={'/login'}>
             <Login />
           </Route>

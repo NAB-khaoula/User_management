@@ -21,9 +21,13 @@ const Login = () => {
         console.log('logout');
     }
 
-    const loginWithIntra =  () => {
-        axios.get('http://localhost:3000/oauth')
-            .then(resp => resp.data);
+    const loginWithIntra = () => {
+        const response = axios.get('http://localhost:3000/oauth/', {
+            headers: {
+                "Access-Control-Allow-Origin": "*",
+        'Access-Control-Allow-Credentials':'true'    }
+        } )
+        .then(resp => { console.log('here is the json response', response) });
     }
 
     return (
@@ -51,9 +55,7 @@ const Login = () => {
                     </div>
                 </div>
                 <div className="LoginBox">
-                    <button className='LoginButton' onClick={loginWithIntra}>
-                        Login With 42 Intra
-                    </button>
+                    <button className='LoginButton' onClick={loginWithIntra}>Login With 42 Intra</button>
                 </div>
             </div>
         </>

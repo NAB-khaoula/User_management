@@ -1,24 +1,44 @@
 import { Injectable } from '@nestjs/common';
-
-// This should be a real class/interface representing a user entity
-export type User = any;
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from '../auth/user.entity';
+import { UserDto } from 'src/auth/dto';
 
 @Injectable()
-export class BetaUsersService {
-  private readonly users = [
-    {
-      userId: 1,
-      username: 'john',
-      password: 'changeme',
-    },
-    {
-      userId: 2,
-      username: 'maria',
-      password: 'guess',
-    },
-  ];
+export class UsersService {
+  constructor(
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+  ) {}
 
-  async findOne(username: string): Promise<User | undefined> {
-    return this.users.find((user) => user.username === username);
+  getAll(): Promise<User[]> {
+    return this.userRepository.find();
   }
+
+  async getUserByUserName(username: string): Promise<User> {
+    const userCreated = new User();
+    userCreated.userName = username;
+    const usrFound = await this.userRepository.findOne(userCreated);
+    return usrFound;
+  }
+
+  async addUser(user: UserDto) {
+    const userCreated = new User();
+    userCreated.userName = user.user_name;
+    userCreated.displayName = user.display_name;
+    userCreated.avatarUrl = user.avatar_url;
+    const newUser = this.userRepository.create(userCreated);
+    return this.userRepository.insert(newUser);
+  }
+
+  // async updateUser(user: UserDto): Promise<User> {
+  //   const updatedUser = await this.getUserByUserName(user.user_name);
+  //   updatedUser.userName = userName;
+  //   return this.userRepository.save(updatedUser);
+  // }
+
+  // async removeUser(usrName: string) {
+  //   const deletedUser = await this.getUserByUserName(usrName);
+  //   return await this.userRepository.remove(deletedUser);
+  // }
 }
