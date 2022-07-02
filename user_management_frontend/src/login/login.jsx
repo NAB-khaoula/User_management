@@ -22,12 +22,15 @@ const Login = () => {
     }
 
     const loginWithIntra = () => {
-        const response = axios.get('http://localhost:3000/oauth/', {
+        const response = axios
+          .get('http://localhost:3000/oauth/', {
             headers: {
-                "Access-Control-Allow-Origin": "*",
-        'Access-Control-Allow-Credentials':'true'    }
-        } )
-        .then(resp => { console.log('here is the json response', response) });
+              'Access-Control-Allow-Origin': '*',
+            },
+          })
+          .then((resp) => {
+            console.log('here is the json response', response);
+          });
     }
 
     return (
