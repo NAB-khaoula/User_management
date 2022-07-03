@@ -22,7 +22,7 @@ export class fourtyTwoStrategy extends PassportStrategy(Strategy, '42') {
     profile: Profile,
     done: verify,
   ): Promise<any> {
-    const { id, username, photos, displayName } = profile;
+    const { username, photos, displayName } = profile;
     const user: UserDto = {
       user_name: username,
       display_name: displayName,

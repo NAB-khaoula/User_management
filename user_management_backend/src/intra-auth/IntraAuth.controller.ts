@@ -5,10 +5,7 @@ import { IntraAuthService } from './services/IntraAuth.service';
 
 @Controller('oauth')
 export class IntraAuthController {
-  constructor(
-    private readonly intraAuthService: IntraAuthService,
-    private usersService: UsersService,
-  ) {}
+  constructor(private readonly intraAuthService: IntraAuthService) {}
 
   @Get()
   @HttpCode(200)

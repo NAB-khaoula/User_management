@@ -1,20 +1,24 @@
 import { Module } from '@nestjs/common';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 import { UsersModule } from 'src/users/users.module';
 import { AuthService } from './auth.service';
-import { LocalStrategy } from './local.startegy';
 import { JwtStrategy } from './Strategies/jwt.strategy';
+import { LocalStrategy } from './Strategies/local.strategy';
 
 @Module({
   imports: [
-    PassportModule,
     UsersModule,
+    PassportModule,
     JwtModule.register({
-      secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '60s' },
+      secretOrPrivateKey: `secret_postgres`,
+      signOptions: { expiresIn: '2days' },
     }),
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy],
+  exports: [AuthService],
 })
 export class AuthModule {}
