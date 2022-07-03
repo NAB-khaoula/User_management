@@ -26,17 +26,4 @@ export class UsersController {
   getProfile(@Request() req) {
     return req.user;
   }
-
-  // @Get(':usrName')
-  // async getUserByuserName(@Res() res, @Param('usrName') params) {
-  //   try {
-  //     const userObj = await this.userServices.getUserByUserName(params);
-  //     return res.status(HttpStatus.OK).json({
-  //       id: userObj.id,
-  //       userName: userObj.userName,
-  //     });
-  //   } catch (error) {
-  //     console.log('The error is: ', error);
-  //   }
-  // }
 }

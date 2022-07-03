@@ -28,8 +28,6 @@ export class fourtyTwoStrategy extends PassportStrategy(Strategy, '42') {
       display_name: displayName,
       avatar_url: photos[0].value,
     };
-    // console.log(user);
     done(null, user);
-    // console.log('done');
   }
 }
