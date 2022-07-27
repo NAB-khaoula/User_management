@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Res } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { AuthGuard } from '@nestjs/passport';
 import { UsersService } from 'src/users/users.service';
 import { UserDto } from './dto';
 
@@ -16,14 +17,14 @@ export class AuthService {
     return null;
   }
 
-  async login(user: UserDto) {
+  async login(user: UserDto, @Res({ passthrough: true }) res) {
     const payload = {
       username: user.user_name,
       displayname: user.display_name,
       avatarUrl: user.avatar_url,
     };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+    return await this.jwtService.sign(payload);
+    // const accessToken = await this.jwtService.sign(payload);
+    // res.setCookie('access_token', accessToken);
   }
 }

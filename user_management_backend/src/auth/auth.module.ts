@@ -5,6 +5,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 import { UsersModule } from 'src/users/users.module';
+import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './Strategies/jwt.strategy';
 import { LocalStrategy } from './Strategies/local.strategy';
@@ -20,5 +21,6 @@ import { LocalStrategy } from './Strategies/local.strategy';
   ],
   providers: [AuthService, LocalStrategy, JwtStrategy],
   exports: [AuthService],
+  controllers: [AuthController],
 })
 export class AuthModule {}

@@ -31,11 +31,11 @@ export class UsersService {
     return this.userRepository.insert(newUser);
   }
 
-  // async updateUser(user: UserDto): Promise<User> {
-  //   const updatedUser = await this.getUserByUserName(user.user_name);
-  //   updatedUser.userName = userName;
-  //   return this.userRepository.save(updatedUser);
-  // }
+  async updateUser(user: UserDto, username: string): Promise<User> {
+    const updatedUser = await this.getUserByUserName(user.user_name);
+    updatedUser.userName = username;
+    return this.userRepository.save(updatedUser);
+  }
 
   // async removeUser(usrName: string) {
   //   const deletedUser = await this.getUserByUserName(usrName);
