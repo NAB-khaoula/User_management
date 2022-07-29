@@ -19,7 +19,7 @@ function Settings() {
     console.log(event.target.files[0]);
     setAvatar(event.target.files[0]);
   };
-  const updateUserCredential = async (event) => {
+  const updateUserName = async (event) => {
     const accessToken = await Cookies.get('access_token');
     axios.post(
       'http://localhost:3000/user/username',
@@ -32,67 +32,61 @@ function Settings() {
         },
       }
     );
-    const form = new FormData();
-    form.append('image', avatar);
-    await axios.post('http://localhost:3000/user/upload', form, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
-    const URL = axios
-      .get('http://localhost:3000/user', {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
-      .then(
-        (resolve) => 'http://localhost:3001/user' + resolve.data['avatarUrl']
-      );
+    // const form = new FormData();
+    // form.append('image', avatar);
+    // await axios.post('http://localhost:3000/user/upload', form, {
+    //   headers: { Authorization: `Bearer ${accessToken}` },
+    // });
+    // const URL = axios
+    //   .get('http://localhost:3000/user', {
+    //     headers: {
+    //       Authorization: `Bearer ${accessToken}`,
+    //     },
+    //   })
+    //   .then(
+    //     (resolve) => 'http://localhost:3001/user' + resolve.data['avatarUrl']
+    //   );
   };
   return (
     <>
       <ParticlesBackground />
-      {/* <div className={styles.escButton}>
-        <div className={styles.escOuterButton}>
-          <div className={styles.escInnerButton}></div>
-        </div>
-        <h6>ESC</h6>
-      </div>
-      <div className={styles.container}>
-        <div className={styles.sectionTitle}>User profile</div>
-        <div className={styles.sectionContent}>
-          <label htmlFor="">User Name</label>
-          <form className={styles.userName} onSubmit={handleSubmit}>
+      <div className={styles.setting}>
+        <div className={styles.avatar}>
+          <div className={styles.fileInput}>
             <input
-              type="text"
-              placeholder="Enter your user name"
-              // value={userName}
+              type="file"
+              id="file"
+              className={styles.file}
+              onChange={handleAvatarUpload}
             />
-            <button type="submit">Edit</button>
-          </form>
-          <div className={styles.Avatar}>
-            <label htmlFor="">Avatar</label>
-            <input type="file" name="avatar" accept="png" />
-          </div>
-          <div className={styles.twoFactorAuth}>
-            TWO-FACTOR AUTHENTICATION
-            <p>
-              Add an extra layer of security to your account by using a one-time
-              security code each time you login.
-            </p>
-            <label htmlFor="">Enable 2FA</label>
-            <label className={styles.switch}>
-              <input type="checkbox" />
-              <span className={`${styles.slider} ${styles.round}`}></span>
+            <label for="file">
+              <img
+                className={styles.imgAvatar}
+                src="http://localhost:5000/default-avatar.png"
+                alt=""
+              />
             </label>
           </div>
         </div>
-      </div> */}
-      <div className={styles.credentials}>
-        <input
-          type="text"
-          placeholder="Enter your user name"
-          value={userName}
-        />
-        <button type="submit">Edit</button>
+        <div className={styles.userName}>
+          <label htmlFor="">User Name</label>
+          <input
+            type="text"
+            placeholder="Enter your user name"
+            className={styles.userInput}
+            onChange={handleUsernameChange}
+          />
+          <button className={styles.btnUsername} onClick={updateUserName}>
+            Edit
+          </button>
+        </div>
+        <div className={styles.twoFactorAuth}>
+          <label htmlFor="">ENABLE TWO-FACTOR AUTHENTICATION</label>
+          <label className={styles.switch}>
+            <input type="checkbox" />
+            <span className={`${styles.slider} ${styles.round}`}></span>
+          </label>
+        </div>
       </div>
     </>
   );
