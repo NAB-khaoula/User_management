@@ -1,34 +1,45 @@
 import {
-  Body,
   Controller,
   Get,
+  HttpException,
   HttpStatus,
   Param,
   Post,
   Req,
   Res,
+  UnauthorizedException,
 } from '@nestjs/common';
-import { UserDto } from 'src/auth/dto';
 import { JwtAuthGuard } from 'src/auth/Guards/jwt-auth.guard';
 import { UsersService } from './users.service';
 import { UseGuards } from '@nestjs/common';
-import { Request } from '@nestjs/common';
-import { AuthService } from 'src/auth/auth.service';
 import { UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadedFile } from '@nestjs/common';
+import { diskStorage } from 'multer';
 
+const editfilename = (req, file, callback) => {
+  if (!file.mimetype.match(/\/(jpg|jpeg|png|gif)$/))
+    callback(
+      new HttpException('Bad file extension!', HttpStatus.BAD_REQUEST),
+      false,
+    );
+  else
+    callback(
+      null,
+      Date.now() + '-' + req.user['login'] + '.' + file.originalname,
+    );
+};
 @Controller('user')
 export class UsersController {
   constructor(private userServices: UsersService) {}
 
-  @Get('users')
   @Get()
   @UseGuards(JwtAuthGuard)
   getUser(@Req() req) {
     return this.userServices.getUserBylogin(req.user['login']);
   }
 
+  @Get('users')
   @UseGuards(JwtAuthGuard)
   getUsers() {
     return this.userServices.getAll();
@@ -42,13 +53,26 @@ export class UsersController {
 
   @Post('/upload')
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('image'))
-  uploadFile(@UploadedFile() image: Express.Multer.File, @Req() req) {
-    this.userServices.updateAvatarUrl(req.user['login'], image['filename']);
-  }
-
-  @Get(':imgPath')
-  getAvatar(@Param('imgPath') image, @Res() res) {
-    res.sendFile(image, { root: './src/uploads' });
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: 'uploads',
+        filename: editfilename,
+      }),
+    }),
+  )
+  async uploadFile(@UploadedFile() image: Express.Multer.File, @Req() req) {
+    if (image) {
+      const updateUser = await this.userServices.getUserBylogin(
+        req.user['login'],
+      );
+      console.log(image);
+      if (updateUser)
+        return this.userServices.updateAvatarUrl(
+          await updateUser,
+          image['filename'],
+        );
+    }
+    throw new UnauthorizedException();
   }
 }

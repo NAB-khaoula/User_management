@@ -33,9 +33,18 @@ function SignInPopup() {
     );
     const form = new FormData();
     form.append('image', avatar);
-    axios.post('http://localhost:3000/user/upload', form, {
+    await axios.post('http://localhost:3000/user/upload', form, {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
+    const URL = axios
+      .get('http://localhost:3000/user', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .then(
+        (resolve) => 'http://localhost:3001/user' + resolve.data['avatarUrl']
+      );
   };
   return (
     <div className={styles.container}>
@@ -50,14 +59,14 @@ function SignInPopup() {
             onChange={handleUsernameChange}
           />
         </div>
-        <div className={styles.avatar}>
-          <label htmlFor="">Avatar</label>
+        <div className={styles.fileInput}>
           <input
             type="file"
-            name="avatar"
-            accept="png"
+            id="file"
+            className={styles.file}
             onChange={handleAvatarUpload}
           />
+          <label for="file">Upload Avatar</label>
         </div>
         <button className={styles.btn} onClick={updateUserCredential}>
           Edit

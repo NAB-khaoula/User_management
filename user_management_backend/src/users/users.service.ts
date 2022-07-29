@@ -1,4 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -39,8 +44,7 @@ export class UsersService {
     return this.userRepository.save(updatedUser);
   }
 
-  async updateAvatarUrl(login: string, avatar: string): Promise<User> {
-    const updatedUser = await this.getUserBylogin(login);
+  async updateAvatarUrl(updatedUser: User, avatar: string): Promise<User> {
     if (avatar) updatedUser.avatarUrl = avatar;
     return this.userRepository.save(updatedUser);
   }

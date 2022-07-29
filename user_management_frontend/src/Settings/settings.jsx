@@ -8,17 +8,49 @@ import styles from './settings.module.css';
 
 function Settings() {
   const [userName, setUserName] = useState('');
-  const handleSubmit = async (event) => {
+  const [avatar, setAvatar] = useState('');
+  const handleUsernameChange = async (event) => {
     event.preventDefault();
+    setUserName(event.target.value);
+  };
+
+  const handleAvatarUpload = async (event) => {
+    event.preventDefault();
+    console.log(event.target.files[0]);
+    setAvatar(event.target.files[0]);
+  };
+  const updateUserCredential = async (event) => {
     const accessToken = await Cookies.get('access_token');
-    const test = await axios.get('http://localhost:3000/isAuthorized', {
+    axios.post(
+      'http://localhost:3000/user/username',
+      {
+        username: userName,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const form = new FormData();
+    form.append('image', avatar);
+    await axios.post('http://localhost:3000/user/upload', form, {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
+    const URL = axios
+      .get('http://localhost:3000/user', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
+      .then(
+        (resolve) => 'http://localhost:3001/user' + resolve.data['avatarUrl']
+      );
   };
   return (
     <>
       <ParticlesBackground />
-      <div className={styles.escButton}>
+      {/* <div className={styles.escButton}>
         <div className={styles.escOuterButton}>
           <div className={styles.escInnerButton}></div>
         </div>
@@ -40,29 +72,27 @@ function Settings() {
             <label htmlFor="">Avatar</label>
             <input type="file" name="avatar" accept="png" />
           </div>
-          <div className={styles.Bio}>
-            About me
-            <textarea
-              name=""
-              id=""
-              cols="70"
-              rows="4"
-              placeholder="Neque porro quisquam est qui dolorem ipsum quia dolor sit amet,"
-            ></textarea>
-            <div className={styles.twoFactorAuth}>
-              TWO-FACTOR AUTHENTICATION
-              <p>
-                Add an extra layer of security to your account by using a
-                one-time security code each time you login.
-              </p>
-              <label htmlFor="">Enable 2FA</label>
-              <label className={styles.switch}>
-                <input type="checkbox" />
-                <span className={`${styles.slider} ${styles.round}`}></span>
-              </label>
-            </div>
+          <div className={styles.twoFactorAuth}>
+            TWO-FACTOR AUTHENTICATION
+            <p>
+              Add an extra layer of security to your account by using a one-time
+              security code each time you login.
+            </p>
+            <label htmlFor="">Enable 2FA</label>
+            <label className={styles.switch}>
+              <input type="checkbox" />
+              <span className={`${styles.slider} ${styles.round}`}></span>
+            </label>
           </div>
         </div>
+      </div> */}
+      <div className={styles.credentials}>
+        <input
+          type="text"
+          placeholder="Enter your user name"
+          value={userName}
+        />
+        <button type="submit">Edit</button>
       </div>
     </>
   );
