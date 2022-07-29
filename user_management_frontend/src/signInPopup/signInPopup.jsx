@@ -15,26 +15,27 @@ function SignInPopup() {
 
   const handleAvatarUpload = async (event) => {
     event.preventDefault();
-    setAvatar(event.target.value);
+    console.log(event.target.files[0]);
+    setAvatar(event.target.files[0]);
   };
-  const handleButton = async (event) => {
+  const updateUserCredential = async (event) => {
     const accessToken = await Cookies.get('access_token');
-    // const user = await axios.get('http://localhost:3000/user', {
-    //   headers: { Authorization: `Bearer ${accessToken}` },
-    // });
-    // console.log(user);
-    if (userName) {
-      
-    }
-    // axios.post(
-    //   'http://localhost:3000/user/username',
-    //   {
-    //     username: userName,
-    //   },
-    //   {
-    //     headers: { Authorization: `Bearer ${accessToken}` },
-    //   }
-    // );
+    axios.post(
+      'http://localhost:3000/user/username',
+      {
+        username: userName,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    const form = new FormData();
+    form.append('image', avatar);
+    axios.post('http://localhost:3000/user/upload', form, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
   };
   return (
     <div className={styles.container}>
@@ -58,7 +59,9 @@ function SignInPopup() {
             onChange={handleAvatarUpload}
           />
         </div>
-        <button onClick={handleButton}>Edit</button>
+        <button className={styles.btn} onClick={updateUserCredential}>
+          Edit
+        </button>
       </div>
     </div>
   );

@@ -6,11 +6,17 @@ export class User {
   id: number;
 
   @Column({ unique: true })
+  login: string;
+
+  @Column({ unique: true })
   userName: string;
 
   @Column()
-  displayName: string;
+  avatarUrl: string;
 
   @Column()
-  avatarUrl: string;
+  removedAvatar: boolean;
+
+  @Column()
+  twoFactorAuth: boolean;
 }

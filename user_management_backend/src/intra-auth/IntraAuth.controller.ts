@@ -14,9 +14,8 @@ export class IntraAuthController {
   @UseGuards(IntraAuthGuard)
   async login(@Req() req, @Res({ passthrough: true }) res) {
     const userExist = await this.intraAuthService.intraLogin(req);
-    const accesToken = await this.authService.login(req, res);
+    const accesToken = await this.authService.login(req.user);
     res.cookie('access_token', accesToken);
-    console.log(userExist);
     if (!userExist) return res.redirect('http://localhost:3001/signIn');
     return res.redirect('http://localhost:3001/welcome');
   }

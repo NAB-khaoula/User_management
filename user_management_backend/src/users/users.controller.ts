@@ -22,23 +22,33 @@ import { UploadedFile } from '@nestjs/common';
 export class UsersController {
   constructor(private userServices: UsersService) {}
 
-  @Post('/EnterUsername')
-  @UseGuards(JwtAuthGuard)
-  setUserName(@Req() req) {
-    console.log(req);
-    // this.userServices.updateUser(req.data.username);
-  }
-
+  @Get('users')
   @Get()
   @UseGuards(JwtAuthGuard)
   getUser(@Req() req) {
-    return req.user;
-    // return this.authService.validateUser(req.body)
+    return this.userServices.getUserBylogin(req.user['login']);
   }
 
-  @Post('upload')
-  @UseInterceptors(FileInterceptor('file'))
-  uploadFile(@UploadedFile() file: Express.Multer.File) {
-    console.log(file);
+  @UseGuards(JwtAuthGuard)
+  getUsers() {
+    return this.userServices.getAll();
+  }
+
+  @Post('/username')
+  @UseGuards(JwtAuthGuard)
+  setUserName(@Req() req) {
+    this.userServices.updateUsername(req.user['login'], req.body['username']);
+  }
+
+  @Post('/upload')
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('image'))
+  uploadFile(@UploadedFile() image: Express.Multer.File, @Req() req) {
+    this.userServices.updateAvatarUrl(req.user['login'], image['filename']);
+  }
+
+  @Get(':imgPath')
+  getAvatar(@Param('imgPath') image, @Res() res) {
+    res.sendFile(image, { root: './src/uploads' });
   }
 }

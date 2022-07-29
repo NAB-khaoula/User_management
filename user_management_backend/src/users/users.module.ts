@@ -4,6 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { User } from './user.entity';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
@@ -23,6 +24,9 @@ import { UsersService } from './users.service';
       isGlobal: true,
     }),
     TypeOrmModule.forFeature([User]),
+    MulterModule.register({
+      dest: './src/uploads',
+    }),
   ],
   controllers: [UsersController],
   providers: [UsersService],

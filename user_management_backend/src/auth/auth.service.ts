@@ -12,19 +12,15 @@ export class AuthService {
   ) {}
 
   async validateUser(username: string): Promise<any> {
-    const user = await this.usersService.getUserByUserName(username);
+    const user = await this.usersService.getUserBylogin(username);
     if (user) return user;
     return null;
   }
 
-  async login(user: UserDto, @Res({ passthrough: true }) res) {
+  async login(user: UserDto) {
     const payload = {
-      username: user.user_name,
-      displayname: user.display_name,
-      avatarUrl: user.avatar_url,
+      login: user.login,
     };
     return await this.jwtService.sign(payload);
-    // const accessToken = await this.jwtService.sign(payload);
-    // res.setCookie('access_token', accessToken);
   }
 }

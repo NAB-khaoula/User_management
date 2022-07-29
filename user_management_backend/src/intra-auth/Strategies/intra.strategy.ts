@@ -24,9 +24,9 @@ export class fourtyTwoStrategy extends PassportStrategy(Strategy, '42') {
   ): Promise<any> {
     const { username, photos, displayName } = profile;
     const user: UserDto = {
-      user_name: username,
-      display_name: displayName,
-      avatar_url: photos[0].value,
+      login: username,
+      userName: displayName,
+      avatarUrl: photos[0].value,
     };
     done(null, user);
   }

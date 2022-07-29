@@ -21,3 +21,29 @@
     justify-content: center;
     align-items: center;
 }
+.btn {
+    appearance: button;
+    background-color: white;
+    border: solid transparent;
+    border-width: 0 0 4px;
+    color: black;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    line-height: 20px;
+    overflow: visible;
+    text-align: center;
+    text-transform: uppercase;
+    margin-top: 50px;
+    width: 150px;
+    height: 60px;
+}
+
+.btn:hover {
+    background-color: transparent;
+    color: white;
+    border: solid white;
+
+}
