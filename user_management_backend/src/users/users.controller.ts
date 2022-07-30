@@ -3,10 +3,8 @@ import {
   Get,
   HttpException,
   HttpStatus,
-  Param,
   Post,
   Req,
-  Res,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/Guards/jwt-auth.guard';
@@ -36,7 +34,9 @@ export class UsersController {
   @Get()
   @UseGuards(JwtAuthGuard)
   getUser(@Req() req) {
-    return this.userServices.getUserBylogin(req.user['login']);
+    const user = this.userServices.getUserBylogin(req.user['login']);
+    if (user) return user;
+    return { error: 'user not found' };
   }
 
   @Get('users')
@@ -66,7 +66,6 @@ export class UsersController {
       const updateUser = await this.userServices.getUserBylogin(
         req.user['login'],
       );
-      console.log(image);
       if (updateUser)
         return this.userServices.updateAvatarUrl(
           await updateUser,

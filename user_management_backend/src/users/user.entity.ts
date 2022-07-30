@@ -15,7 +15,7 @@ export class User {
   avatarUrl: string;
 
   @Column()
-  removedAvatar: boolean;
+  changedAvatar: boolean;
 
   @Column()
   twoFactorAuth: boolean;

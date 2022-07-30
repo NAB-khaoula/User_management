@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ParticlesBackground } from '../particles/ParticlesBack';
 import { useState } from 'react';
 import axios from 'axios';
@@ -9,30 +9,37 @@ import styles from './settings.module.css';
 function Settings() {
   const [userName, setUserName] = useState('');
   const [avatar, setAvatar] = useState('');
-  const [defaultURL, setDefaultURL] = useState('');
+  const [defaultURL, setDefaultURL] = useState(null);
 
-  const updateAvatar = async (event) => {
-    setAvatar(event.target.files[0]);
-    const accessToken = await Cookies.get('access_token');
-    setDefaultURL(
-      await axios
+  useEffect(() => {
+    const accessToken = Cookies.get('access_token');
+    const responseImage = async () => {
+      return await axios
         .get('http://localhost:5000/user', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
+          headers: { Authorization: `Bearer ${accessToken}` },
         })
         .then((resolve) => {
-          console.log(resolve);
-          if (!resolve.data['removedAvatar'])
-            return 'http://localhost:3000/' + resolve.data['avatarUrl'];
-          return '';
-        })
-    );
+          const staticUrl = resolve.data.changedAvatar
+            ? 'http://localhost:5000/' + resolve.data['avatarUrl']
+            : resolve.data.avatarUrl;
+          setDefaultURL(staticUrl);
+        });
+    };
+    responseImage();
+  }, [avatar]);
+
+  const updateAvatar = async (event) => {
+    event.preventDefault();
+    const accessToken = await Cookies.get('access_token');
     const form = new FormData();
-    form.append('image', avatar);
-    await axios.post('http://localhost:5000/user/upload', form, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
+    form.append('image', event.target.files[0]);
+    await axios
+      .post('http://localhost:5000/user/upload', form, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      })
+      .then((res) => {
+        setAvatar(res.data['avatarUrl']);
+      });
   };
 
   const handleUsername = async (event) => {
@@ -40,7 +47,7 @@ function Settings() {
     setUserName(event.target.value);
   };
 
-  const updateUserName = async (event) => {
+  const updateUserName = async () => {
     const accessToken = await Cookies.get('access_token');
     axios.post(
       'http://localhost:5000/user/username',
@@ -57,7 +64,6 @@ function Settings() {
   return (
     <>
       <ParticlesBackground />
-      {console.log('something   ', defaultURL)}
       <div className={styles.setting}>
         <div className={styles.avatar}>
           <div className={styles.fileInput}>
@@ -70,9 +76,8 @@ function Settings() {
             <label htmlFor="file">
               <img
                 className={styles.imgAvatar}
-                src="http://localhost:5000/default-avatar.png"
-                // src={defaultURL}
-                alt="haha"
+                src={defaultURL}
+                alt="user avatar"
               />
             </label>
           </div>

@@ -1,9 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -32,7 +27,7 @@ export class UsersService {
     userCreated.login = user.login;
     userCreated.userName = user.userName;
     userCreated.avatarUrl = user.avatarUrl;
-    userCreated.removedAvatar = user.removedAvatar || false;
+    userCreated.changedAvatar = user.changedAvatar || false;
     userCreated.twoFactorAuth = user.twoFactorAuth || false;
     const newUser = this.userRepository.create(userCreated);
     return this.userRepository.insert(newUser);
@@ -45,12 +40,10 @@ export class UsersService {
   }
 
   async updateAvatarUrl(updatedUser: User, avatar: string): Promise<User> {
-    if (avatar) updatedUser.avatarUrl = avatar;
+    if (avatar) {
+      updatedUser.avatarUrl = avatar;
+      updatedUser.changedAvatar = true;
+    }
     return this.userRepository.save(updatedUser);
   }
-
-  // async removeUser(usrName: string) {
-  //   const deletedUser = await this.getUserByUserName(usrName);
-  //   return await this.userRepository.remove(deletedUser);
-  // }
 }
