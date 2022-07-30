@@ -9,20 +9,41 @@ import styles from './settings.module.css';
 function Settings() {
   const [userName, setUserName] = useState('');
   const [avatar, setAvatar] = useState('');
-  const handleUsernameChange = async (event) => {
+  const [defaultURL, setDefaultURL] = useState('');
+
+  const updateAvatar = async (event) => {
+    setAvatar(event.target.files[0]);
+    const accessToken = await Cookies.get('access_token');
+    setDefaultURL(
+      await axios
+        .get('http://localhost:5000/user', {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        .then((resolve) => {
+          console.log(resolve);
+          if (!resolve.data['removedAvatar'])
+            return 'http://localhost:3000/' + resolve.data['avatarUrl'];
+          return '';
+        })
+    );
+    const form = new FormData();
+    form.append('image', avatar);
+    await axios.post('http://localhost:5000/user/upload', form, {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+  };
+
+  const handleUsername = async (event) => {
     event.preventDefault();
     setUserName(event.target.value);
   };
 
-  const handleAvatarUpload = async (event) => {
-    event.preventDefault();
-    console.log(event.target.files[0]);
-    setAvatar(event.target.files[0]);
-  };
   const updateUserName = async (event) => {
     const accessToken = await Cookies.get('access_token');
     axios.post(
-      'http://localhost:3000/user/username',
+      'http://localhost:5000/user/username',
       {
         username: userName,
       },
@@ -32,24 +53,11 @@ function Settings() {
         },
       }
     );
-    // const form = new FormData();
-    // form.append('image', avatar);
-    // await axios.post('http://localhost:3000/user/upload', form, {
-    //   headers: { Authorization: `Bearer ${accessToken}` },
-    // });
-    // const URL = axios
-    //   .get('http://localhost:3000/user', {
-    //     headers: {
-    //       Authorization: `Bearer ${accessToken}`,
-    //     },
-    //   })
-    //   .then(
-    //     (resolve) => 'http://localhost:3001/user' + resolve.data['avatarUrl']
-    //   );
   };
   return (
     <>
       <ParticlesBackground />
+      {console.log('something   ', defaultURL)}
       <div className={styles.setting}>
         <div className={styles.avatar}>
           <div className={styles.fileInput}>
@@ -57,31 +65,32 @@ function Settings() {
               type="file"
               id="file"
               className={styles.file}
-              onChange={handleAvatarUpload}
+              onChange={updateAvatar}
             />
-            <label for="file">
+            <label htmlFor="file">
               <img
                 className={styles.imgAvatar}
                 src="http://localhost:5000/default-avatar.png"
-                alt=""
+                // src={defaultURL}
+                alt="haha"
               />
             </label>
           </div>
         </div>
         <div className={styles.userName}>
-          <label htmlFor="">User Name</label>
+          <label>User Name</label>
           <input
             type="text"
             placeholder="Enter your user name"
             className={styles.userInput}
-            onChange={handleUsernameChange}
+            onChange={handleUsername}
           />
           <button className={styles.btnUsername} onClick={updateUserName}>
             Edit
           </button>
         </div>
         <div className={styles.twoFactorAuth}>
-          <label htmlFor="">ENABLE TWO-FACTOR AUTHENTICATION</label>
+          <label>ENABLE TWO-FACTOR AUTHENTICATION</label>
           <label className={styles.switch}>
             <input type="checkbox" />
             <span className={`${styles.slider} ${styles.round}`}></span>

@@ -16,7 +16,7 @@ export class IntraAuthController {
     const userExist = await this.intraAuthService.intraLogin(req);
     const accesToken = await this.authService.login(req.user);
     res.cookie('access_token', accesToken);
-    if (!userExist) return res.redirect('http://localhost:3001/settings');
+    if (!userExist) return res.redirect('http://localhost:3000/settings');
     return res.redirect('http://localhost:3000/welcome');
   }
 }
