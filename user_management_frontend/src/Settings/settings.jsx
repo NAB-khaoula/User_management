@@ -10,23 +10,37 @@ function Settings() {
   const [userName, setUserName] = useState('');
   const [avatar, setAvatar] = useState('');
   const [defaultURL, setDefaultURL] = useState(null);
+  const [qrCode, setQrCode] = useState();
+  const [is2FA, setIs2FA] = useState(false);
 
   useEffect(() => {
-    const accessToken = Cookies.get('access_token');
     const responseImage = async () => {
+      const accessToken = await Cookies.get('access_token');
       return await axios
         .get('http://localhost:5000/user', {
           headers: { Authorization: `Bearer ${accessToken}` },
         })
         .then((resolve) => {
           const staticUrl = resolve.data.changedAvatar
-            ? 'http://localhost:5000/' + resolve.data['avatarUrl']
-            : resolve.data.avatarUrl;
+            ? 'http://localhost:5000/' + resolve.data['avatar']
+            : resolve.data.avatar;
           setDefaultURL(staticUrl);
         });
     };
     responseImage();
   }, [avatar]);
+
+  useEffect(() => {
+    const qrFunct = async () => {
+      const accessToken = await Cookies.get('access_token');
+      await axios
+        .get('http://localhost:5000/twofactorAuth/register', {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        })
+        .then((res) => setQrCode(res.data.qrcode));
+    };
+    qrFunct();
+  }, []);
 
   const updateAvatar = async (event) => {
     event.preventDefault();
@@ -38,7 +52,7 @@ function Settings() {
         headers: { Authorization: `Bearer ${accessToken}` },
       })
       .then((res) => {
-        setAvatar(res.data['avatarUrl']);
+        setAvatar(res.data['avatar']);
       });
   };
 
@@ -61,6 +75,22 @@ function Settings() {
       }
     );
   };
+
+  const handle2FA = async (event) => {
+    const accessToken = await Cookies.get('access_token');
+    await axios
+      .post(
+        'http://localhost:5000/twofactorAuth/turnAuthOn',
+        {},
+        {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        }
+      )
+      .then((res) => {
+        setIs2FA(res.data.isTwoFactorAuthEnabled);
+      });
+  };
+
   return (
     <>
       <ParticlesBackground />
@@ -96,11 +126,20 @@ function Settings() {
         </div>
         <div className={styles.twoFactorAuth}>
           <label>ENABLE TWO-FACTOR AUTHENTICATION</label>
-          <label className={styles.switch}>
-            <input type="checkbox" />
+          <button className={styles.btnUsername} onClick={handle2FA}>
+            Enable 2FA
+          </button>
+          {/* <label className={styles.switch}>
+            <input type="checkbox" onChange={handle2FA} checked />
             <span className={`${styles.slider} ${styles.round}`}></span>
-          </label>
+          </label> */}
         </div>
+        {is2FA && (
+          <div>
+            <p>Scan the QR code on your GOOGLE authenticator </p>
+            <img src={qrCode} alt="qrCode" />
+          </div>
+        )}
       </div>
     </>
   );

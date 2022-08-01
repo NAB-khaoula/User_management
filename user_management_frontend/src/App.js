@@ -4,6 +4,7 @@ import './App.css';
 import Login from './login/login';
 import Settings from './Settings/settings';
 import Welcome from './welcome/welcome';
+import TwoFactAuth from './TwoFactAuth/TwoFactAuth';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path={'/settings'} element={<Settings />} />
         <Route path={'/login'} element={<Login />} />
         <Route path={'/welcome'} element={<Welcome />} />
+        <Route path={'/2fa'} element={<TwoFactAuth />} />
       </Routes>
     </Router>
   );

@@ -9,14 +9,23 @@ export class User {
   login: string;
 
   @Column({ unique: true })
-  userName: string;
+  email: string;
+
+  @Column({ unique: true })
+  username: string;
 
   @Column()
-  avatarUrl: string;
+  avatar: string;
 
   @Column()
   changedAvatar: boolean;
 
   @Column()
-  twoFactorAuth: boolean;
+  isTwoFactorAuthEnabled: boolean;
+
+  @Column()
+  isTwoFactorAuthenticated: boolean;
+
+  @Column()
+  twoFactorAuthenticationSecret: string;
 }
