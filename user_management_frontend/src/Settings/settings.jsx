@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 
 import styles from './settings.module.css';
 
-function Settings() {
+function Settings(props) {
   const [userName, setUserName] = useState('');
   const [avatar, setAvatar] = useState('');
   const [defaultURL, setDefaultURL] = useState(null);
@@ -14,6 +14,7 @@ function Settings() {
   const [is2FA, setIs2FA] = useState(false);
 
   useEffect(() => {
+    // console.log(props.user);
     const responseImage = async () => {
       const accessToken = await Cookies.get('access_token');
       return await axios
@@ -25,6 +26,7 @@ function Settings() {
             ? 'http://localhost:5000/' + resolve.data['avatar']
             : resolve.data.avatar;
           setDefaultURL(staticUrl);
+          setIs2FA(resolve.data.isTwoFactorAuthEnabled);
         });
     };
     responseImage();
@@ -87,6 +89,7 @@ function Settings() {
         }
       )
       .then((res) => {
+        console.log(res.data.isTwoFactorAuthEnabled);
         setIs2FA(res.data.isTwoFactorAuthEnabled);
       });
   };
@@ -113,30 +116,26 @@ function Settings() {
           </div>
         </div>
         <div className={styles.userName}>
-          <label>User Name</label>
+          <label>Username</label>
           <input
             type="text"
-            placeholder="Enter your user name"
+            placeholder="Enter userName"
             className={styles.userInput}
             onChange={handleUsername}
           />
-          <button className={styles.btnUsername} onClick={updateUserName}>
+          <button className={styles.btnDef} onClick={updateUserName}>
             Edit
           </button>
         </div>
         <div className={styles.twoFactorAuth}>
           <label>ENABLE TWO-FACTOR AUTHENTICATION</label>
-          <button className={styles.btnUsername} onClick={handle2FA}>
-            Enable 2FA
+          <button className={styles.btnDef} onClick={handle2FA}>
+            {is2FA ? 'Disable' : 'Enable'}
           </button>
-          {/* <label className={styles.switch}>
-            <input type="checkbox" onChange={handle2FA} checked />
-            <span className={`${styles.slider} ${styles.round}`}></span>
-          </label> */}
         </div>
         {is2FA && (
-          <div>
-            <p>Scan the QR code on your GOOGLE authenticator </p>
+          <div className={styles.qrCode}>
+            <p>Scan the QR code on your authenticator </p>
             <img src={qrCode} alt="qrCode" />
           </div>
         )}

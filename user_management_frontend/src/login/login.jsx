@@ -1,7 +1,30 @@
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import { useEffect } from 'react';
 import { ParticlesBackground } from '../particles/ParticlesBack';
 import styles from './login.module.css';
 
 const Login = () => {
+  // let mount = true;
+  // useEffect(() => {
+  //   if (mount) {
+  //     const accessToken = Cookies.get('access_token');
+  //     if (accessToken) {
+  //       axios
+  //         .get('http://localhost:5000/user', {
+  //           headers: {
+  //             Authorization: `Bearer ${accessToken}`,
+  //           },
+  //         })
+  //         .then((res) => {
+  //           console.log(res.data);
+  //         });
+  //     }
+  //   }
+  //   return () => {
+  //     mount = false;
+  //   };
+  // }, []);
   return (
     <>
       <ParticlesBackground />
@@ -13,27 +36,6 @@ const Login = () => {
             <div className={styles.pad}></div>
             <div className={styles.pong}></div>
             <div className={styles.ball}></div>
-          </div>
-          <h6>
-            Designed and developed with <i className="fa.solid fa-heart"></i>{' '}
-            by:
-          </h6>
-          <div className={styles.dev}>
-            <a href="https://github.com/NAB-khaoula" className={styles.devLink}>
-              a
-            </a>
-            <a
-              href="https://github.com/mojahid-belaman"
-              className={styles.devLink}
-            >
-              b
-            </a>
-            <a href="#" className={styles.devLink}>
-              c
-            </a>
-            <a href="#" className={styles.devLink}>
-              d
-            </a>
           </div>
         </div>
         <div className={styles.LoginBox}>
