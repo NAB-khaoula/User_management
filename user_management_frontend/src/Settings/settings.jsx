@@ -89,7 +89,6 @@ function Settings(props) {
         }
       )
       .then((res) => {
-        console.log(res.data.isTwoFactorAuthEnabled);
         setIs2FA(res.data.isTwoFactorAuthEnabled);
       });
   };
